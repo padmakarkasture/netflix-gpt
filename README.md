@@ -7,6 +7,10 @@ validation
 useRef 
 Firebase
 Hosting/deployment
+Implement sign in  sign up
+created store
+Implemented signout
+updae profile
 
 
 # Features

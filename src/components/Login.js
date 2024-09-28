@@ -1,60 +1,79 @@
-import React , {useRef} from 'react'
-import Header from './Header'
-import { useState } from 'react';
-import {checkValidData} from '../utils/validate'
-import {  createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
-import {auth} from '../utils/firebase'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../utils/firebase';
+import { checkValidData } from '../utils/validate';
+import Header from './Header';
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 
 const Login = () => {
   // either you can use state variables to store or referrence
-  const email= useRef(null);
-  const password= useRef(null);
-  const name= useRef(null);
-  const [errorMessage,setErroeMessage] =useState()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const email = useRef(null);
+  const password = useRef(null);
+  const name = useRef(null);
+  const [errorMessage, setErroeMessage] = useState()
   const [isLogin, setIsLogin] = useState(true);
-  const handleButtonClick=(e)=>{
+  const handleButtonClick = (e) => {
     e.preventDefault()
-    const validationError = checkValidData(email.current.value,password.current.value)
+    const validationError = checkValidData(email.current.value, password.current.value)
     // console.log("is valid",isNotValid)
-    
-   
+
+
     setErroeMessage(validationError)
-    if(validationError) return;
+    if (validationError) return;
     // sign Up
-    if(!isLogin){
+    if (!isLogin) {
       // sign up logic
 
 
-createUserWithEmailAndPassword(auth, email.current.value,password.current.value)
-  .then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user; 
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setErroeMessage(error.message)
-    // ..
-  });
-    }else {
-      //sign in logic
-      signInWithEmailAndPassword(auth, email.current.value,password.current.value)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setErroeMessage(errorMessage)
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          const {user}=userCredential;
+          updateProfile(user,{
+            displayName:name.current.value,
+            photoURL:""
+          }).then((user)=>{
+            const {uid,email,displayName} =auth.currentUser;
 
-  });
+            dispatch(addUser({uid,email,displayName}))
+            navigate("/browse")
+          })
+          .catch(error=>{
+            console.log("error",error)
+          })
+
+
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErroeMessage(error.message)
+          // ..
+        });
+    } else {
+      //sign in logic
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          navigate("/browse")
+
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErroeMessage(errorMessage)
+
+        });
     }
-    
-  
+
+
     // validate data
   }
   return (
