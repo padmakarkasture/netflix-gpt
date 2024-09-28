@@ -2,6 +2,12 @@
 
 created by create-react-app
 configured tailwind css
+sinin signup form 
+validation
+useRef 
+Firebase
+Hosting/deployment
+
 
 # Features
 - Browse (after au)
