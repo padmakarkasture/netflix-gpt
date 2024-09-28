@@ -4,7 +4,7 @@ created by create-react-app
 configured tailwind css
 
 # Features
-- Browse
+- Browse (after au)
   - Header
   - main movie
   - trailer in background
