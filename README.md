@@ -24,6 +24,12 @@ BugFix: accessible browse page when logout
 - update store with trailer details
 - emebeded the youtube player to show the video.
 - tailwind classes to look better
+- added secondary container
+- added cards and popular category
+- tmdb image
+- usePopularMovies custom hooks
+- 
+
 
 
 
