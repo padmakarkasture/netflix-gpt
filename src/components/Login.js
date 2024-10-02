@@ -1,6 +1,5 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { auth } from '../utils/firebase';
 import { checkValidData } from '../utils/validate';
 import Header from './Header';
@@ -11,7 +10,6 @@ import { addUser } from "../utils/userSlice";
 const Login = () => {
   // either you can use state variables to store or referrence
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   const email = useRef(null);
   const password = useRef(null);
   const name = useRef(null);
@@ -20,7 +18,6 @@ const Login = () => {
   const handleButtonClick = (e) => {
     e.preventDefault()
     const validationError = checkValidData(email.current.value, password.current.value)
-    // console.log("is valid",isNotValid)
 
 
     setErroeMessage(validationError)
@@ -40,7 +37,7 @@ const Login = () => {
             const {uid,email,displayName} =auth.currentUser;
 
             dispatch(addUser({uid,email,displayName}))
-            navigate("/browse")
+            // navigate("/browse")
           })
           .catch(error=>{
             console.log("error",error)
@@ -50,9 +47,7 @@ const Login = () => {
           // ...
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          setErroeMessage(error.message)
+             setErroeMessage(error.message)
           // ..
         });
     } else {
@@ -60,13 +55,11 @@ const Login = () => {
       signInWithEmailAndPassword(auth, email.current.value, password.current.value)
         .then((userCredential) => {
           // Signed in 
-          const user = userCredential.user;
-          navigate("/browse")
+          // navigate("/browse")
 
           // ...
         })
         .catch((error) => {
-          const errorCode = error.code;
           const errorMessage = error.message;
           setErroeMessage(errorMessage)
 
@@ -79,7 +72,7 @@ const Login = () => {
   return (
     <><Header />
       <div>
-        <img className="absolute" src="https://assets.nflxext.com/ffe/siteui/vlv3/bfc0fc46-24f6-4d70-85b3-7799315c01dd/web/IN-en-20240923-TRIFECTA-perspective_74e21c19-980e-45ef-bd6c-78c1a6ce9381_medium.jpg" />
+        <img className="absolute object-cover" src="https://assets.nflxext.com/ffe/siteui/vlv3/bfc0fc46-24f6-4d70-85b3-7799315c01dd/web/IN-en-20240923-TRIFECTA-perspective_74e21c19-980e-45ef-bd6c-78c1a6ce9381_medium.jpg" />
       </div>
       <form className='bg-black absolute p-12 top-20 w-3/12 my-12 mx-auto left-0 right-0 bg-opacity-80 text-white'>
         <h1 className='font-bold text-3xl py-4' >{isLogin ? "Sign In" : "Sign Up"}</h1>
